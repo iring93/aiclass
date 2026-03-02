@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活動報名儀表板 - 教學行政效率翻倍工作坊</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Noto Serif TC"', 'serif'],
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    },
+                    colors: {
+                        'classic-bg': '#F9F8F6',
+                        'classic-paper': '#FFFFFF',
+                        'classic-text': '#3E3A39',
+                        'classic-accent': '#8C7355',
+                        'classic-border': '#D5CABD',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: theme('colors.classic-bg'); color: theme('colors.classic-text'); }
+        .card { background-color: theme('colors.classic-paper'); border: 1px solid theme('colors.classic-border'); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .spinner { border: 3px solid rgba(140, 115, 85, 0.3); border-radius: 50%; border-top: 3px solid theme('colors.classic-accent'); width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="font-sans antialiased py-8 px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col">
+
+    <div class="max-w-7xl mx-auto w-full flex-grow relative">
+        
+        <!-- Header -->
+        <header class="flex flex-col sm:flex-row justify-between items-center mb-8 border-b border-classic-border pb-6">
+            <div>
+                <p class="font-serif text-classic-accent tracking-widest text-sm mb-1">DATA DASHBOARD</p>
+                <h1 class="font-serif text-3xl font-semibold text-classic-text">即時報名數據儀表板</h1>
+            </div>
+            <div class="mt-4 sm:mt-0 flex items-center space-x-4">
+                <span id="lastUpdateTime" class="text-sm text-gray-500">最後更新：--:--</span>
+                <button onclick="fetchData()" id="refreshBtn" class="flex items-center bg-classic-paper border border-classic-border px-4 py-2 hover:bg-classic-accent hover:text-white transition-colors duration-300 text-sm shadow-sm">
+                    <span id="refreshIcon" class="mr-2">↻</span>
+                    <span id="refreshText">重新整理</span>
+                    <div id="loadingSpinner" class="spinner hidden ml-2" style="width: 16px; height: 16px; border-width: 2px;"></div>
+                </button>
+            </div>
+        </header>
+
+        <!-- Error Message Container -->
+        <div id="errorContainer" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6"></div>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="card p-6 text-center">
+                <p class="text-sm text-gray-500 mb-1">總報名人數</p>
+                <p id="kpiTotal" class="text-4xl font-serif text-classic-accent font-bold">0</p>
+            </div>
+            <div class="card p-6 text-center">
+                <p class="text-sm text-gray-500 mb-1">需要茶水點心</p>
+                <p id="kpiSnacks" class="text-4xl font-serif text-classic-text font-bold">0</p>
+            </div>
+            <div class="card p-6 text-center">
+                <p class="text-sm text-gray-500 mb-1">平均信心指數</p>
+                <p id="kpiConfidence" class="text-4xl font-serif text-classic-text font-bold">0.0</p>
+            </div>
+            <div class="card p-6 text-center">
+                <p class="text-sm text-gray-500 mb-1">AI 重度使用者</p>
+                <p id="kpiHeavyUsers" class="text-4xl font-serif text-classic-text font-bold">0</p>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- 職稱分佈 (圓餅圖) -->
+            <div class="card p-6 flex flex-col">
+                <h3 class="font-serif text-lg font-semibold text-classic-accent mb-4 border-b border-gray-100 pb-2">職稱分佈</h3>
+                <div class="flex-grow relative h-64">
+                    <canvas id="jobTitleChart"></canvas>
+                </div>
+            </div>
+            <!-- AI 使用頻率 (長條圖) -->
+            <div class="card p-6 flex flex-col">
+                <h3 class="font-serif text-lg font-semibold text-classic-accent mb-4 border-b border-gray-100 pb-2">AI 使用頻率現況</h3>
+                <div class="flex-grow relative h-64">
+                    <canvas id="aiFreqChart"></canvas>
+                </div>
+            </div>
+            <!-- 需求痛點 (水平長條圖) -->
+            <div class="card p-6 flex flex-col md:col-span-2">
+                <h3 class="font-serif text-lg font-semibold text-classic-accent mb-4 border-b border-gray-100 pb-2">行政工作需求痛點 (可複選)</h3>
+                <div class="flex-grow relative h-72">
+                    <canvas id="painPointsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="card overflow-hidden">
+            <div class="px-6 py-4 border-b border-classic-border bg-gray-50/50 flex justify-between items-center">
+                <h3 class="font-serif text-lg font-semibold text-classic-text">最新報名明細</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left whitespace-nowrap">
+                    <thead class="text-xs text-gray-600 bg-gray-50 border-b border-classic-border uppercase">
+                        <tr>
+                            <th class="px-6 py-3 font-medium">報名時間</th>
+                            <th class="px-6 py-3 font-medium">姓名</th>
+                            <th class="px-6 py-3 font-medium">單位</th>
+                            <th class="px-6 py-3 font-medium">職稱</th>
+                            <th class="px-6 py-3 font-medium">需求痛點</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody" class="divide-y divide-gray-100">
+                        <!-- 資料會由 JS 動態填入 -->
+                        <tr>
+                            <td colspan="5" class="px-6 py-8 text-center text-gray-400">正在載入資料...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js 共同樣式設定 -->
+    <script>
+        // 設定 Chart.js 預設字體
+        Chart.defaults.font.family = '"Noto Sans TC", sans-serif';
+        Chart.defaults.color = '#6b7280';
+        
+        // 經典配色盤
+        const colorPalette = [
+            '#8C7355', // 卡其金 (主色)
+            '#6B7280', // 灰
+            '#D5CABD', // 淺卡其
+            '#3E3A39', // 炭黑
+            '#A8A29E', // 暖灰
+            '#E5E7EB'  // 極淺灰
+        ];
+
+        // 宣告圖表變數以便後續更新
+        let jobTitleChartInstance = null;
+        let aiFreqChartInstance = null;
+        let painPointsChartInstance = null;
+    </script>
+
+    <script>
+        // ==========================================
+        // 🌟 您的 Google Apps Script 網址
+        // ==========================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxwOUf_f5HFP4fZs-Jf0JisjC6w2ogOFTXFd7pr54aashzPupFuekU757RIfAUjNlW/exec';
+
+        // 啟動時立即載入資料
+        document.addEventListener('DOMContentLoaded', fetchData);
+
+        async function fetchData() {
+            setLoadingState(true);
+            document.getElementById('errorContainer').classList.add('hidden');
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    processAndRenderData(result.data);
+                    
+                    // 更新最後更新時間
+                    const now = new Date();
+                    document.getElementById('lastUpdateTime').innerText = `最後更新：${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                } else {
+                    showError('讀取資料失敗：' + result.message);
+                }
+            } catch (error) {
+                showError('網路連線異常，請確認 Apps Script 已部署最新版本並允許跨域存取。');
+                console.error('Fetch error:', error);
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        function setLoadingState(isLoading) {
+            const btn = document.getElementById('refreshBtn');
+            const icon = document.getElementById('refreshIcon');
+            const spinner = document.getElementById('loadingSpinner');
+            
+            if (isLoading) {
+                btn.disabled = true;
+                icon.classList.add('hidden');
+                spinner.classList.remove('hidden');
+            } else {
+                btn.disabled = false;
+                icon.classList.remove('hidden');
+                spinner.classList.add('hidden');
+            }
+        }
+
+        function showError(message) {
+            const container = document.getElementById('errorContainer');
+            container.innerText = message;
+            container.classList.remove('hidden');
+            document.getElementById('dataTableBody').innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-red-500">無法載入資料</td></tr>`;
+        }
+
+        function processAndRenderData(data) {
+            if (!data || data.length === 0) {
+                document.getElementById('dataTableBody').innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">目前尚無報名資料</td></tr>`;
+                return;
+            }
+
+            // --- 1. 計算 KPI 數據 ---
+            const total = data.length;
+            const snacksNeeded = data.filter(r => r.snacks === '是').length;
+            const heavyUsers = data.filter(r => r.q6 === '重度使用者').length;
+            
+            let confidenceSum = 0;
+            let confidenceCount = 0;
+            data.forEach(r => {
+                const score = parseInt(r.q8);
+                if (!isNaN(score)) {
+                    confidenceSum += score;
+                    confidenceCount++;
+                }
+            });
+            const avgConfidence = confidenceCount > 0 ? (confidenceSum / confidenceCount).toFixed(1) : '0.0';
+
+            document.getElementById('kpiTotal').innerText = total;
+            document.getElementById('kpiSnacks').innerText = snacksNeeded;
+            document.getElementById('kpiConfidence').innerText = avgConfidence;
+            document.getElementById('kpiHeavyUsers').innerText = heavyUsers;
+
+            // --- 2. 統計職稱 ---
+            const jobCounts = {};
+            data.forEach(r => {
+                let job = r.jobTitle || '未填寫';
+                if (job.startsWith('其他:')) job = '其他';
+                jobCounts[job] = (jobCounts[job] || 0) + 1;
+            });
+            renderJobTitleChart(Object.keys(jobCounts), Object.values(jobCounts));
+
+            // --- 3. 統計 AI 使用頻率 ---
+            const freqCounts = { '重度使用者':0, '中度使用者':0, '輕度使用者':0, '新手':0 };
+            data.forEach(r => {
+                const f = r.q6;
+                if (freqCounts[f] !== undefined) freqCounts[f]++;
+            });
+            renderAiFreqChart(Object.keys(freqCounts), Object.values(freqCounts));
+
+            // --- 4. 統計痛點需求 (複選) ---
+            const painCounts = {};
+            data.forEach(r => {
+                if (r.q9) {
+                    // 分割逗號，並清理空白
+                    const points = r.q9.split(',').map(p => p.trim()).filter(p => p);
+                    points.forEach(p => {
+                        painCounts[p] = (painCounts[p] || 0) + 1;
+                    });
+                }
+            });
+            // 排序 (由大到小)
+            const sortedPain = Object.entries(painCounts).sort((a, b) => b[1] - a[1]);
+            renderPainPointsChart(sortedPain.map(item => item[0]), sortedPain.map(item => item[1]));
+
+            // --- 5. 渲染表格資料 (顯示最新 10 筆) ---
+            const tbody = document.getElementById('dataTableBody');
+            tbody.innerHTML = '';
+            
+            // 將陣列反轉，讓最新的資料排在最上面
+            const reversedData = [...data].reverse();
+            
+            reversedData.slice(0, 10).forEach(row => {
+                const tr = document.createElement('tr');
+                tr.classList.add('hover:bg-gray-50', 'transition-colors');
+                
+                // 處理日期格式
+                let dateStr = '未知時間';
+                try {
+                    const d = new Date(row.timestamp);
+                    dateStr = `${d.getFullYear()}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getDate().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+                } catch(e) {}
+
+                // 簡化痛點文字 (如果太長)
+                let painText = row.q9 || '-';
+                if (painText.length > 30) painText = painText.substring(0, 30) + '...';
+
+                tr.innerHTML = `
+                    <td class="px-6 py-3 text-gray-500">${dateStr}</td>
+                    <td class="px-6 py-3 font-medium text-classic-text">${escapeHtml(row.name)}</td>
+                    <td class="px-6 py-3 text-gray-600">${escapeHtml(row.department)}</td>
+                    <td class="px-6 py-3 text-gray-600">${escapeHtml(row.jobTitle)}</td>
+                    <td class="px-6 py-3 text-gray-500 text-xs truncate max-w-xs">${escapeHtml(painText)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- 繪圖函式 ---
+
+        function renderJobTitleChart(labels, data) {
+            const ctx = document.getElementById('jobTitleChart').getContext('2d');
+            if (jobTitleChartInstance) jobTitleChartInstance.destroy();
+            
+            jobTitleChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colorPalette,
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 12, padding: 15 } }
+                    }
+                }
+            });
+        }
+
+        function renderAiFreqChart(labels, data) {
+            const ctx = document.getElementById('aiFreqChart').getContext('2d');
+            if (aiFreqChartInstance) aiFreqChartInstance.destroy();
+            
+            aiFreqChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '人數',
+                        data: data,
+                        backgroundColor: colorPalette[0], // 使用主色
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 }, grid: { borderDash: [4, 4] } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function renderPainPointsChart(labels, data) {
+            const ctx = document.getElementById('painPointsChart').getContext('2d');
+            if (painPointsChartInstance) painPointsChartInstance.destroy();
+            
+            painPointsChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '勾選次數',
+                        data: data,
+                        backgroundColor: colorPalette[1], // 使用次色
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // 水平長條圖
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 }, grid: { borderDash: [4, 4] } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // 防止 XSS 攻擊的簡單處理
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
