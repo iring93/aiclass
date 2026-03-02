@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>【教育訓練報名表】生成式 AI 驅動教學行政效率翻倍工作坊</title>
+    <title>【台大食堂】線上預約點餐單</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,8 @@
                         'classic-bg': '#F9F8F6',
                         'classic-paper': '#FFFFFF',
                         'classic-text': '#3E3A39',
-                        'classic-accent': '#8C7355',
+                        // 替換為台大經典磚紅色調
+                        'classic-accent': '#8C3B3B', 
                         'classic-border': '#D5CABD',
                     }
                 }
@@ -37,15 +38,16 @@
             width: 1.1rem;
             height: 1.1rem;
         }
-        .elegant-input {
+        .elegant-input, .elegant-select {
             border: none;
             border-bottom: 1px solid theme('colors.classic-border');
             background-color: transparent;
             border-radius: 0;
             padding: 0.5rem 0;
             transition: all 0.3s ease;
+            width: 100%;
         }
-        .elegant-input:focus {
+        .elegant-input:focus, .elegant-select:focus {
             outline: none;
             border-bottom: 2px solid theme('colors.classic-accent');
             box-shadow: none;
@@ -67,389 +69,273 @@
             color: theme('colors.classic-accent');
             font-size: 0.8rem;
         }
+        /* 餐點價格標籤樣式 */
+        .price-tag {
+            font-family: 'Noto Serif TC', serif;
+            color: theme('colors.classic-accent');
+            font-weight: 600;
+            margin-left: auto;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border: 1px solid transparent;
+            transition: background-color 0.2s;
+        }
+        .menu-item:hover {
+            background-color: theme('colors.classic-bg');
+        }
     </style>
 </head>
 <body class="font-sans antialiased py-10 px-4 sm:px-6 lg:px-8">
 
-    <main class="max-w-4xl mx-auto bg-classic-paper p-8 sm:p-12 shadow-sm border border-classic-border relative">
+    <main class="max-w-3xl mx-auto bg-classic-paper p-8 sm:p-12 shadow-sm border border-classic-border relative mb-24">
         
+        <!-- 四角裝飾 -->
         <div class="absolute top-0 left-0 w-8 h-8 border-t border-l border-classic-accent opacity-50 m-2"></div>
         <div class="absolute top-0 right-0 w-8 h-8 border-t border-r border-classic-accent opacity-50 m-2"></div>
         <div class="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-classic-accent opacity-50 m-2"></div>
         <div class="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-classic-accent opacity-50 m-2"></div>
 
+        <!-- Header -->
         <header class="text-center mb-10">
-            <p class="font-serif text-classic-accent tracking-widest text-sm mb-2">教育訓練報名表</p>
-            <h1 class="font-serif text-3xl sm:text-4xl font-semibold leading-snug text-classic-text">
-                生成式 AI 驅動<br class="sm:hidden">教學行政效率翻倍工作坊
+            <p class="font-serif text-classic-accent tracking-widest text-sm mb-2">National Taiwan University</p>
+            <h1 class="font-serif text-3xl sm:text-4xl font-semibold leading-snug text-classic-text tracking-wide">
+                台大食堂線上預約點餐單
             </h1>
             <div class="decorative-line">
                 <span>✦</span>
             </div>
         </header>
 
-        <!-- 一、活動資訊 -->
-        <section class="mb-12">
-            <h2 class="font-serif text-xl font-semibold border-b border-classic-border pb-2 mb-6 text-classic-accent">一、 活動資訊</h2>
+        <!-- 一、訂餐資訊 -->
+        <section class="mb-10">
+            <h2 class="font-serif text-xl font-semibold border-b border-classic-border pb-2 mb-6 text-classic-accent">一、 營業與取餐資訊</h2>
             <div class="space-y-4 text-sm sm:text-base leading-relaxed pl-2 sm:pl-4">
                 <div class="flex flex-col sm:flex-row">
-                    <span class="font-semibold w-24 shrink-0 text-classic-text">目　　的：</span>
-                    <p class="text-gray-600">本工作坊旨在介紹生成式 AI (如 ChatGPT, Gemini) 的核心原理，並深入探討如何將其應用於教學部的日常行政、專案管理與文書處理中，以數據驅動決策，提升團隊效率與應變能力。</p>
+                    <span class="font-semibold w-24 shrink-0 text-classic-text">供餐時間：</span>
+                    <p class="text-gray-600">午餐 11:30 - 13:30 ｜ 晚餐 17:00 - 19:00</p>
                 </div>
                 <div class="flex flex-col sm:flex-row">
-                    <span class="font-semibold w-24 shrink-0 text-classic-text">日　　期：</span>
-                    <p class="text-gray-600">2026 年 03 月 14 日 (週六)</p>
+                    <span class="font-semibold w-24 shrink-0 text-classic-text">取餐地點：</span>
+                    <p class="text-gray-600">第一學生活動中心 (活大) 1F 專屬取餐口</p>
                 </div>
                 <div class="flex flex-col sm:flex-row">
-                    <span class="font-semibold w-24 shrink-0 text-classic-text">時　　間：</span>
-                    <p class="text-gray-600">14:00 - 17:00 (共 3 小時)</p>
-                </div>
-                <div class="flex flex-col sm:flex-row">
-                    <span class="font-semibold w-24 shrink-0 text-classic-text">地　　點：</span>
-                    <p class="text-gray-600">第五醫療大樓 5F 552 會議室</p>
+                    <span class="font-semibold w-24 shrink-0 text-classic-text">注意事項：</span>
+                    <p class="text-gray-600">為確保餐點品質，請於取餐時間 <span class="text-classic-accent font-semibold">前 30 分鐘</span> 完成線上點餐。現場結帳僅提供悠遊卡或 Line Pay 支付。</p>
                 </div>
             </div>
         </section>
 
-        <!-- 二、活動議程 -->
-        <section class="mb-12">
-            <h2 class="font-serif text-xl font-semibold border-b border-classic-border pb-2 mb-6 text-classic-accent">二、 活動議程</h2>
-            <div class="pl-2 sm:pl-4">
-                <ul class="space-y-6 relative border-l border-classic-border ml-3 sm:ml-4">
-                    <li class="pl-6 relative">
-                        <span class="absolute w-2 h-2 bg-classic-accent rounded-full -left-[4.5px] top-1.5"></span>
-                        <div class="font-serif font-semibold text-lg">14:00 - 14:15 | 報到與暖身 (Check-in)</div>
-                        <p class="text-gray-600 text-sm mt-1">領取講義、連接設備，並進行簡單的數位工具破冰。</p>
-                    </li>
-                    <li class="pl-6 relative">
-                        <span class="absolute w-2 h-2 bg-classic-border rounded-full -left-[4.5px] top-1.5"></span>
-                        <div class="font-serif font-semibold text-lg">14:15 - 15:00 | Session 1: 與 AI 共舞的藝術</div>
-                        <p class="text-gray-600 text-sm mt-1">從指令工程 (Prompt Engineering) 入門。為什麼 AI 給的答案有時很奇怪？學習如何精準下指令，讓 AI 成為你的最強秘書。</p>
-                    </li>
-                    <li class="pl-6 relative">
-                        <span class="absolute w-2 h-2 bg-classic-border rounded-full -left-[4.5px] top-1.5"></span>
-                        <div class="font-serif font-semibold text-lg text-classic-accent/80">15:00 - 15:10 | 中場休息 (Break)</div>
-                    </li>
-                    <li class="pl-6 relative">
-                        <span class="absolute w-2 h-2 bg-classic-border rounded-full -left-[4.5px] top-1.5"></span>
-                        <div class="font-serif font-semibold text-lg">15:10 - 16:00 | Session 2: 行政痛點擊破案例</div>
-                        <p class="text-gray-600 text-sm mt-1">不再被 Deadline 追著跑！分享如何利用 AI 快速生成活動企劃、自動整理會議紀錄、以及優化問卷數據分析。</p>
-                    </li>
-                    <li class="pl-6 relative">
-                        <span class="absolute w-2 h-2 bg-classic-border rounded-full -left-[4.5px] top-1.5"></span>
-                        <div class="font-serif font-semibold text-lg">16:00 - 16:40 | Workshop: AI 實戰演練</div>
-                        <p class="text-gray-600 text-sm mt-1">分組工作坊：請學員拿出目前手邊正在處理的一份文件或數據，現場利用 AI 工具進行優化與實作。</p>
-                    </li>
-                    <li class="pl-6 relative">
-                        <span class="absolute w-2 h-2 bg-classic-accent rounded-full -left-[4.5px] top-1.5"></span>
-                        <div class="font-serif font-semibold text-lg">16:40 - 17:00 | 總結與問答 (Q&A)</div>
-                    </li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- 表單開始 -->
-        <form id="registrationForm" onsubmit="handleSubmit(event)">
+        <form id="orderForm" onsubmit="handleSubmit(event)">
             
-            <!-- 三、報名基本資料 -->
+            <!-- 二、訂餐人資料 -->
             <section class="mb-12">
-                <h2 class="font-serif text-xl font-semibold border-b border-classic-border pb-2 mb-6 text-classic-accent">三、 報名基本資料</h2>
+                <h2 class="font-serif text-xl font-semibold border-b border-classic-border pb-2 mb-6 text-classic-accent">二、 訂餐人資料</h2>
                 <div class="space-y-6 pl-2 sm:pl-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="flex flex-col">
                             <label for="name" class="font-semibold mb-1">姓名 <span class="text-red-500">*</span></label>
-                            <input type="text" id="name" required class="elegant-input w-full" placeholder="請輸入姓名">
+                            <input type="text" id="name" required class="elegant-input" placeholder="請輸入姓名">
                         </div>
                         <div class="flex flex-col">
-                            <label for="email" class="font-semibold mb-1">電子郵件 (Email) <span class="text-red-500">*</span></label>
-                            <input type="email" id="email" required class="elegant-input w-full" placeholder="請輸入電子郵件">
+                            <label for="studentId" class="font-semibold mb-1">學號 / 教職員工號 <span class="text-red-500">*</span></label>
+                            <input type="text" id="studentId" required class="elegant-input" placeholder="例如：B11901000">
                         </div>
-                        <div class="flex flex-col md:col-span-2">
-                            <label for="department" class="font-semibold mb-1">單位 <span class="text-red-500">*</span></label>
-                            <input type="text" id="department" required class="elegant-input w-full" placeholder="請輸入所屬單位">
+                        <div class="flex flex-col">
+                            <label for="phone" class="font-semibold mb-1">聯絡電話 <span class="text-red-500">*</span></label>
+                            <input type="tel" id="phone" required class="elegant-input" placeholder="09XX-XXX-XXX">
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="pickupTime" class="font-semibold mb-1">預計取餐時間 <span class="text-red-500">*</span></label>
+                            <select id="pickupTime" required class="elegant-select text-gray-700 cursor-pointer">
+                                <option value="" disabled selected>請選擇時間</option>
+                                <optgroup label="午餐時段">
+                                    <option value="11:30">11:30</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="12:30">12:30</option>
+                                    <option value="13:00">13:00</option>
+                                </optgroup>
+                                <optgroup label="晚餐時段">
+                                    <option value="17:00">17:00</option>
+                                    <option value="17:30">17:30</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="18:30">18:30</option>
+                                </optgroup>
+                            </select>
                         </div>
                     </div>
-
-                    <fieldset>
-                        <legend class="font-semibold mb-3">職稱 <span class="text-red-500">*</span></legend>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="radio" name="jobTitle" value="醫師" required>
-                                <span>醫師</span>
-                            </label>
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="radio" name="jobTitle" value="護理師">
-                                <span>護理師</span>
-                            </label>
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="radio" name="jobTitle" value="醫事人員">
-                                <span>醫事人員</span>
-                            </label>
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="radio" name="jobTitle" value="行政人員">
-                                <span>行政人員</span>
-                            </label>
-                            <label class="flex items-center space-x-2 cursor-pointer col-span-2 sm:col-span-2">
-                                <input type="radio" name="jobTitle" value="其他" id="jobOtherRadio">
-                                <span>其他：</span>
-                                <input type="text" id="jobOtherText" class="elegant-input flex-1 ml-2 disabled:opacity-50 disabled:bg-gray-50" disabled placeholder="請註明">
-                            </label>
-                        </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend class="font-semibold mb-3">是否需要茶水點心？</legend>
-                        <div class="flex space-x-6">
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="radio" name="snacks" value="是" checked>
-                                <span>是</span>
-                            </label>
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="radio" name="snacks" value="否">
-                                <span>否</span>
-                            </label>
-                        </div>
-                    </fieldset>
                 </div>
             </section>
 
-            <!-- 四、數位能力與需求調查 -->
+            <!-- 三、餐點選擇 -->
             <section class="mb-12">
-                <h2 class="font-serif text-xl font-semibold border-b border-classic-border pb-2 mb-6 text-classic-accent">四、 數位能力與需求調查</h2>
+                <h2 class="font-serif text-xl font-semibold border-b border-classic-border pb-2 mb-6 text-classic-accent">三、 本日菜單選擇</h2>
                 <div class="space-y-8 pl-2 sm:pl-4">
+                    
+                    <!-- 類別：主餐 -->
                     <fieldset>
-                        <legend class="font-semibold mb-3 text-base">6. 【AI 使用頻率】您目前的 AI 工具使用頻率為何？ (單選)</legend>
-                        <div class="space-y-2 flex flex-col">
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="radio" name="q6" value="重度使用者" required>
-                                <span>重度使用者 (每天都會使用)</span>
+                        <legend class="font-semibold mb-3 text-lg flex items-center">
+                            <span class="w-1.5 h-4 bg-classic-accent mr-2 block"></span> 經典主餐 (請擇一) <span class="text-red-500 ml-1">*</span>
+                        </legend>
+                        <div class="flex flex-col border border-classic-border divide-y divide-classic-border">
+                            <label class="menu-item cursor-pointer">
+                                <input type="radio" name="mainMeal" value="椰林古早味排骨飯" data-price="100" class="mr-4" required>
+                                <span>椰林古早味排骨飯</span>
+                                <span class="price-tag">$100</span>
                             </label>
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="radio" name="q6" value="中度使用者">
-                                <span>中度使用者 (每週使用 2-3 次)</span>
+                            <label class="menu-item cursor-pointer">
+                                <input type="radio" name="mainMeal" value="傅鐘秘製滷雞腿飯" data-price="110" class="mr-4">
+                                <span>傅鐘秘製滷雞腿飯</span>
+                                <span class="price-tag">$110</span>
                             </label>
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="radio" name="q6" value="輕度使用者">
-                                <span>輕度使用者 (偶爾想到才用，一個月不到 1 次)</span>
+                            <label class="menu-item cursor-pointer">
+                                <input type="radio" name="mainMeal" value="醉月蔥爆牛肉餐" data-price="120" class="mr-4">
+                                <span>醉月蔥爆牛肉餐</span>
+                                <span class="price-tag">$120</span>
                             </label>
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="radio" name="q6" value="新手">
-                                <span>新手 (聽過但完全沒用過)</span>
+                            <label class="menu-item cursor-pointer">
+                                <input type="radio" name="mainMeal" value="小福健康鮮蔬餐(素)" data-price="90" class="mr-4">
+                                <span>小福健康鮮蔬餐 <span class="text-xs text-green-600 bg-green-100 px-1 py-0.5 rounded ml-1">素食</span></span>
+                                <span class="price-tag">$90</span>
                             </label>
                         </div>
                     </fieldset>
 
+                    <!-- 類別：單點與湯飲 -->
                     <fieldset>
-                        <legend class="font-semibold mb-3 text-base">7. 【工具經驗】您曾經嘗試過哪些生成式 AI 工具？ (可複選)</legend>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="q7" value="ChatGPT">
-                                <span>ChatGPT (OpenAI)</span>
+                        <legend class="font-semibold mb-3 text-lg flex items-center">
+                            <span class="w-1.5 h-4 bg-classic-border mr-2 block"></span> 單點與飲品 (可複選)
+                        </legend>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 border border-classic-border bg-white">
+                            <label class="menu-item cursor-pointer border-b sm:border-r border-classic-border">
+                                <input type="checkbox" name="addons" value="現滷入味滷蛋" data-price="15" class="mr-4">
+                                <span>現滷入味滷蛋</span>
+                                <span class="price-tag">$15</span>
                             </label>
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="q7" value="Gemini">
-                                <span>Gemini (Google)</span>
+                            <label class="menu-item cursor-pointer border-b border-classic-border">
+                                <input type="checkbox" name="addons" value="季節燙青菜" data-price="30" class="mr-4">
+                                <span>季節燙青菜</span>
+                                <span class="price-tag">$30</span>
                             </label>
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="q7" value="Copilot">
-                                <span>Copilot (Microsoft)</span>
+                            <label class="menu-item cursor-pointer border-b sm:border-b-0 sm:border-r border-classic-border">
+                                <input type="checkbox" name="addons" value="農學院特製鮮奶" data-price="40" class="mr-4">
+                                <span>農學院特製鮮奶</span>
+                                <span class="price-tag">$40</span>
                             </label>
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="q7" value="Midjourney_DALLE">
-                                <span>Midjourney / DALL-E (繪圖類)</span>
-                            </label>
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="q7" value="WritingTools">
-                                <span>寫作輔助工具 (如 Notion AI, Grammarly)</span>
-                            </label>
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="q7" value="None">
-                                <span>完全沒用過</span>
+                            <label class="menu-item cursor-pointer">
+                                <input type="checkbox" name="addons" value="無糖沁涼冷泡茶" data-price="25" class="mr-4">
+                                <span>無糖沁涼冷泡茶</span>
+                                <span class="price-tag">$25</span>
                             </label>
                         </div>
                     </fieldset>
 
+                    <!-- 備註 -->
                     <fieldset>
-                        <legend class="font-semibold mb-3 text-base">8. 【信心指數】您對於「將 AI 應用在工作上」的信心分數？ (1-5分)</legend>
-                        <div class="flex flex-wrap gap-4 sm:gap-8 items-center">
-                            <span class="text-sm text-gray-500 w-full sm:w-auto mb-2 sm:mb-0">非常沒信心</span>
-                            <label class="flex flex-col items-center cursor-pointer">
-                                <input type="radio" name="q8" value="1" required class="mb-1">
-                                <span>1</span>
-                            </label>
-                            <label class="flex flex-col items-center cursor-pointer">
-                                <input type="radio" name="q8" value="2" class="mb-1">
-                                <span>2</span>
-                            </label>
-                            <label class="flex flex-col items-center cursor-pointer">
-                                <input type="radio" name="q8" value="3" class="mb-1">
-                                <span>3 (普通)</span>
-                            </label>
-                            <label class="flex flex-col items-center cursor-pointer">
-                                <input type="radio" name="q8" value="4" class="mb-1">
-                                <span>4</span>
-                            </label>
-                            <label class="flex flex-col items-center cursor-pointer">
-                                <input type="radio" name="q8" value="5" class="mb-1">
-                                <span>5</span>
-                            </label>
-                            <span class="text-sm text-gray-500 w-full sm:w-auto mt-2 sm:mt-0">非常有信心</span>
-                        </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend class="font-semibold mb-1 text-base">9. 【需求痛點】在行政工作中，您最希望 AI 幫您解決哪一類問題？</legend>
-                        <p class="text-sm text-classic-accent mb-3">(可複選，至多選 2 項)</p>
-                        <div class="space-y-2 flex flex-col">
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="q9" value="文案撰寫">
-                                <span>文案撰寫 (公文、新聞稿、信件潤飾)</span>
-                            </label>
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="q9" value="會議記錄">
-                                <span>會議記錄 (逐字稿整理、摘要重點)</span>
-                            </label>
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="q9" value="數據處理">
-                                <span>數據處理 (Excel 公式生成、數據分析解讀)</span>
-                            </label>
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="q9" value="簡報製作">
-                                <span>簡報製作 (PPT 大綱生成、排版設計)</span>
-                            </label>
-                            <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" name="q9" value="資訊檢索">
-                                <span>資訊檢索 (快速找法規、整理文獻)</span>
-                            </label>
-                        </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <label for="q10" class="font-semibold mb-3 block text-base">10. 【會前補充】您目前在行政工作上遇到的最大困難，或想對講師說的話：</label>
-                        <textarea id="q10" rows="4" class="w-full border border-classic-border p-3 rounded-none focus:outline-none focus:border-classic-accent focus:ring-1 focus:ring-classic-accent transition-colors bg-transparent resize-none" placeholder="歡迎在此留言..."></textarea>
+                        <label for="notes" class="font-semibold mb-3 block text-base flex items-center">
+                            <span class="w-1.5 h-4 bg-classic-border mr-2 block"></span> 客製化備註
+                        </label>
+                        <textarea id="notes" rows="2" class="w-full border border-classic-border p-3 rounded-none focus:outline-none focus:border-classic-accent focus:ring-1 focus:ring-classic-accent transition-colors bg-transparent resize-none" placeholder="例如：飯少、不加香菜、青菜多一點..."></textarea>
                     </fieldset>
                 </div>
             </section>
 
-            <!-- 送出按鈕 -->
-            <div class="text-center mt-12 mb-8">
-                <button type="submit" id="submitBtn" class="bg-classic-text text-white font-serif px-12 py-3 tracking-widest hover:bg-classic-accent transition-colors duration-300 shadow-md">
-                    送出報名資料
+            <!-- 底部浮動：總計與送出 -->
+            <div class="fixed bottom-0 left-0 w-full bg-classic-paper border-t border-classic-border shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] p-4 sm:p-6 z-40 flex justify-between items-center px-4 sm:px-12 md:px-24">
+                <div class="flex flex-col">
+                    <span class="text-gray-500 text-sm font-serif">訂單總金額</span>
+                    <div class="text-2xl sm:text-3xl font-serif font-bold text-classic-accent tracking-wide">
+                        NT$ <span id="totalPriceDisplay">0</span>
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn" class="bg-classic-text text-white font-serif px-6 sm:px-10 py-3 tracking-widest hover:bg-classic-accent transition-colors duration-300 shadow-md whitespace-nowrap">
+                    確認點餐
                 </button>
             </div>
-        </form>
 
-        <footer class="mt-12 pt-6 border-t border-classic-border text-sm text-gray-500 space-y-2">
-            <div class="flex flex-col sm:flex-row justify-between">
-                <p><span class="font-semibold text-classic-text">主辦單位：</span>奇美醫院教學部</p>
-                <p><span class="font-semibold text-classic-text">聯絡人：</span>盧英云 (分機57425)</p>
-            </div>
-            <p class="text-xs text-classic-accent">備註： 本報名資料僅供本次研討會聯繫與餐點統計使用。</p>
-        </footer>
+        </form>
     </main>
 
     <!-- 成功提示視窗 -->
     <div id="successModal" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50 transition-opacity">
         <div class="bg-classic-paper p-8 max-w-sm mx-auto border border-classic-border text-center shadow-lg relative">
-            <h3 class="font-serif text-2xl text-classic-accent mb-4">報名成功</h3>
-            <p class="text-classic-text mb-6">我們已收到您的報名資料，資料已同步至雲端系統，期待與您相見！</p>
-            <button onclick="closeModal()" class="border border-classic-text px-6 py-2 hover:bg-classic-text hover:text-white transition-colors">關閉</button>
+            <h3 class="font-serif text-2xl text-classic-accent mb-4">點餐成功</h3>
+            <p class="text-classic-text mb-6">我們已收到您的訂單！請記得於指定時間前往取餐，並於現場完成結帳。祝您用餐愉快！</p>
+            <button onclick="closeModal()" class="border border-classic-text px-8 py-2 hover:bg-classic-text hover:text-white transition-colors">確認</button>
         </div>
     </div>
 
     <script>
         // ==========================================
-        // 🌟 已替換為您專屬的 Google Apps Script 網址
+        // 🌟 您的 Google Apps Script 網址
         // ==========================================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxwOUf_f5HFP4fZs-Jf0JisjC6w2ogOFTXFd7pr54aashzPupFuekU757RIfAUjNlW/exec';
 
-        // 1. 處理「職稱 - 其他」輸入框連動
-        const jobRadios = document.querySelectorAll('input[name="jobTitle"]');
-        const jobOtherText = document.getElementById('jobOtherText');
+        // 即時計算總金額邏輯
+        function calculateTotal() {
+            let total = 0;
+            
+            // 抓取主餐金額
+            const mainMeal = document.querySelector('input[name="mainMeal"]:checked');
+            if(mainMeal) total += parseInt(mainMeal.dataset.price);
 
-        jobRadios.forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                if (e.target.value === '其他') {
-                    jobOtherText.disabled = false;
-                    jobOtherText.required = true;
-                    jobOtherText.focus();
-                } else {
-                    jobOtherText.disabled = true;
-                    jobOtherText.required = false;
-                    jobOtherText.value = '';
-                }
+            // 抓取單點/飲品金額
+            const addons = document.querySelectorAll('input[name="addons"]:checked');
+            addons.forEach(addon => {
+                total += parseInt(addon.dataset.price);
             });
+
+            // 更新顯示
+            document.getElementById('totalPriceDisplay').innerText = total;
+            return total;
+        }
+
+        // 綁定所有帶有 data-price 屬性的 input 的 change 事件
+        document.querySelectorAll('input[data-price]').forEach(input => {
+            input.addEventListener('change', calculateTotal);
         });
 
-        // 2. 處理 Q9 最多選擇兩項的限制
-        const q9Checkboxes = document.querySelectorAll('input[name="q9"]');
-        q9Checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                const checkedCount = document.querySelectorAll('input[name="q9"]:checked').length;
-                if (checkedCount > 2) {
-                    checkbox.checked = false;
-                    alert('【需求痛點】至多只能選擇 2 項喔！');
-                }
-            });
-        });
-
-        // 3. 處理 Q7 如果勾選「完全沒用過」，清除其他選項
-        const q7Checkboxes = document.querySelectorAll('input[name="q7"]');
-        const noneCheckbox = document.querySelector('input[name="q7"][value="None"]');
-
-        q7Checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', (e) => {
-                if (e.target.value === 'None' && e.target.checked) {
-                    q7Checkboxes.forEach(cb => { if (cb.value !== 'None') cb.checked = false; });
-                } else if (e.target.value !== 'None' && e.target.checked) {
-                    noneCheckbox.checked = false;
-                }
-            });
-        });
-
-        // 4. 處理表單送出與 API 串接邏輯
+        // 處理表單送出與 API 串接邏輯
         function handleSubmit(event) {
-            event.preventDefault(); // 阻止表單預設的跳轉行為
+            event.preventDefault(); 
 
-            // 讓按鈕顯示載入中，避免使用者重複點擊
+            // 計算最終總價確保無誤
+            const finalPrice = calculateTotal();
+            if(finalPrice === 0) {
+                alert("請至少選擇一項主餐喔！");
+                return;
+            }
+
+            // 讓按鈕顯示載入中
             const submitBtn = document.getElementById('submitBtn');
             const originalBtnText = submitBtn.innerText;
-            submitBtn.innerText = '資料傳送中...';
+            submitBtn.innerText = '訂單傳送中...';
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
-            // 收集單選與文字資料
+            // 收集資料
             const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const department = document.getElementById('department').value;
-            
-            // 處理職稱 (如果是「其他」，則抓取文字框的值)
-            let jobTitle = document.querySelector('input[name="jobTitle"]:checked')?.value || '';
-            if (jobTitle === '其他') {
-                jobTitle = `其他: ${document.getElementById('jobOtherText').value}`;
-            }
-
-            const snacks = document.querySelector('input[name="snacks"]:checked')?.value || '';
-            const q6 = document.querySelector('input[name="q6"]:checked')?.value || '';
-            const q8 = document.querySelector('input[name="q8"]:checked')?.value || '';
-            const q10 = document.getElementById('q10').value;
+            const studentId = document.getElementById('studentId').value;
+            const phone = document.getElementById('phone').value;
+            const pickupTime = document.getElementById('pickupTime').value;
+            const mainMeal = document.querySelector('input[name="mainMeal"]:checked')?.value || '';
+            const notes = document.getElementById('notes').value;
 
             // 處理複選題 (將陣列轉為用逗號分隔的字串)
-            const q7 = Array.from(document.querySelectorAll('input[name="q7"]:checked')).map(cb => cb.value).join(', ');
-            const q9 = Array.from(document.querySelectorAll('input[name="q9"]:checked')).map(cb => cb.value).join(', ');
+            const addons = Array.from(document.querySelectorAll('input[name="addons"]:checked')).map(cb => cb.value).join(', ');
 
-            // 建立 FormData 以 POST 方式傳遞給 Google Apps Script
+            // 建立 FormData
             const formData = new FormData();
             formData.append('name', name);
-            formData.append('email', email);
-            formData.append('department', department);
-            formData.append('jobTitle', jobTitle);
-            formData.append('snacks', snacks);
-            formData.append('q6', q6);
-            formData.append('q7', q7);
-            formData.append('q8', q8);
-            formData.append('q9', q9);
-            formData.append('q10', q10);
+            formData.append('studentId', studentId);
+            formData.append('phone', phone);
+            formData.append('pickupTime', pickupTime);
+            formData.append('mainMeal', mainMeal);
+            formData.append('addons', addons);
+            formData.append('totalPrice', finalPrice.toString());
+            formData.append('notes', notes);
 
             // 透過 fetch API 送出資料
             fetch(SCRIPT_URL, {
@@ -462,12 +348,12 @@
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
                 
-                // 清空表單
-                document.getElementById('registrationForm').reset();
-                document.getElementById('jobOtherText').disabled = true;
+                // 清空表單與總金額
+                document.getElementById('orderForm').reset();
+                calculateTotal();
             })
             .catch(error => {
-                alert('網路連線異常或跨域被阻擋，但資料通常仍會成功寫入 Google Sheets，請查看您的試算表確認。');
+                alert('網路連線異常，但訂單通常仍會成功送出，請向餐廳人員確認。');
                 console.error('Error!', error.message);
             })
             .finally(() => {
@@ -478,11 +364,12 @@
             });
         }
 
-        // 關閉成功提示視窗
+        // 關閉成功提示視窗並回到頂部
         function closeModal() {
             const modal = document.getElementById('successModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
